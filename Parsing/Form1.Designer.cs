@@ -34,10 +34,9 @@ namespace Parsing
             // 
             // TextHtmlInner
             // 
-            this.TextHtmlInner.Location = new System.Drawing.Point(362, 12);
-            this.TextHtmlInner.Multiline = true;
+            this.TextHtmlInner.Location = new System.Drawing.Point(12, 12);
             this.TextHtmlInner.Name = "TextHtmlInner";
-            this.TextHtmlInner.Size = new System.Drawing.Size(426, 426);
+            this.TextHtmlInner.Size = new System.Drawing.Size(311, 20);
             this.TextHtmlInner.TabIndex = 0;
             // 
             // Form1

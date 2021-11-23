@@ -9,19 +9,24 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Timers;
+using System.Net;
 
 namespace Parsing
 {
     public partial class Form1 : Form
     {
         private System.Windows.Forms.Timer aTimer;
+        private ScreenInfo screen;
+        private DirectoryInfo directoryInfo;
         public Form1()
         {
             aTimer = new System.Windows.Forms.Timer();
-            aTimer.Interval = 30000;
+            aTimer.Interval = 1000;
             aTimer.Tick += ATimer_Tick;
             InitializeComponent();
             aTimer.Start();
+            screen = new ScreenInfo();
+            directoryInfo = new DirectoryInfo();
         }
 
         private void ATimer_Tick(object sender, EventArgs e)
@@ -31,13 +36,35 @@ namespace Parsing
         }
         public void Init()
         {
-            var html = @"https://www.gismeteo.ua/";
+            screen.InitScreen();
+            var html = @"https://prnt.sc/"+screen.RandScreen;
             HtmlWeb web = new HtmlWeb();
             var htmlDoc = web.Load(html);
-            var node = htmlDoc.DocumentNode.SelectSingleNode(@"//div[@class='wn_body']");
-            this.TextHtmlInner.Text += node.SelectSingleNode(@"//a[@class='link blue weather_current_link no_border']").InnerText.Trim();
-            this.TextHtmlInner.Text += node.SelectSingleNode(@"//div[@class='js_meas_container temperature']").InnerText.Trim();
-            this.TextHtmlInner.Text += node.SelectSingleNode(@"//div[@class='ii info_label']").InnerText.Trim() + node.SelectSingleNode(@"//div[@class='ii info_value']").InnerText.Trim();
+            var node = htmlDoc.DocumentNode.SelectSingleNode(@"//div[@class='image-constrain js-image-wrap']");
+            try
+            {
+                if (node != null)
+                { 
+                    this.TextHtmlInner.Text = node.SelectSingleNode(@"//img[@class='no-click screenshot-image']").Attributes["src"].Value;
+                    using (WebClient client = new WebClient())
+                    {
+                        aTimer.Enabled = false;
+                        client.DownloadFile(node.SelectSingleNode(@"//img[@class='no-click screenshot-image']").Attributes["src"].Value, $@"D:\Img\{node.SelectSingleNode(@"//img[@class='no-click screenshot-image']").Attributes["image-id"].Value}.png");
+                        
+                        if (directoryInfo.CheckDirectory())
+                        {
+                            aTimer.Enabled = true;
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                aTimer.Enabled = true;
+            }
+
+            
+
         }
 
         private void Form1_Load(object sender, EventArgs e)
