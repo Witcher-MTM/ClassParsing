@@ -11,14 +11,25 @@ namespace Parsing
     {
         public int AmountFile { get; set; }
         public int CurrenFiles { get; set; }
+        public string FavouriteDir { get; set; }
         public DirectoryInfo()
         {
+            if (!Directory.Exists(@"C:\ProgramData\ScreenProj\Img"))
+            {
+                Directory.CreateDirectory(@"C:\ProgramData\ScreenProj\Img");
+            }
             AmountFile = 0;
-            CurrenFiles = Directory.GetFiles(@"D:\Img", "*").Length;
+            CurrenFiles = Directory.GetFiles(@"C:\ProgramData\ScreenProj\Img", "*").Length;
+            if (!Directory.Exists(@"D:\Favourite"))
+            {
+                Directory.CreateDirectory(@"D:\Favourite");
+            }
+            FavouriteDir = @"D:\Favourite";
         }
         public bool CheckDirectory()
         {
-            AmountFile = Directory.GetFiles(@"D:\Img", "*").Length;
+           
+            AmountFile = Directory.GetFiles(@"C:\ProgramData\ScreenProj\Img", "*").Length;
             if (AmountFile > CurrenFiles)
             {
                 CurrenFiles = AmountFile;
@@ -26,5 +37,6 @@ namespace Parsing
             }
             return false;
         }
+       
     }
 }
