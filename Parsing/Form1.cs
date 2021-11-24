@@ -124,22 +124,20 @@ namespace Parsing
                             directoryInfo.FavouriteDir = directoryInfo.FavouriteDir.Remove(directoryInfo.FavouriteDir.Last(), 1);
                         }
                         this.FavouriteFolderTextBox.Visible = false;
-                   
                 }
-                
             }
         }
-
         private void pictureBox1_Click(object sender, EventArgs e)
         {
             if (pictureBox1.Image != null)
             {
                 aTimer.Enabled = false;
-                File.Copy($@"D:\Img\{listBox1.SelectedItem}", directoryInfo.FavouriteDir + $@"\{listBox1.SelectedItem}");
+                if (!Directory.Exists(directoryInfo.FavouriteDir))
+                {
+                    Directory.CreateDirectory(directoryInfo.FavouriteDir);
+                }
+                File.Copy($@"{directoryInfo.FavouriteDir}\{listBox1.SelectedItem}", directoryInfo.FavouriteDir + $@"\{listBox1.SelectedItem}");
             }
-           
         }
-
-        
     }
 }
